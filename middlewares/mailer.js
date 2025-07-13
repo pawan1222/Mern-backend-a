@@ -1,13 +1,17 @@
 // middleware/mailer.js
 import nodemailer from "nodemailer";
+import dotenv from "dotenv";
+dotenv.config();
+const email_user = encodeURIComponent(process.env.EMAIL_USER);
+const email_pass = encodeURIComponent(process.env.EMAIL_PASS);
 
 export const sendWelcomeEmail = async (toEmail, userName) => {
   try {
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
+        user: email_user,
+        pass: email_pass,
       },
     });
 
