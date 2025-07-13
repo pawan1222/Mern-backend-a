@@ -2,6 +2,7 @@ import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 import userModel from "../models/userModel.js";
+import { sendWelcomeEmail } from "../middlewares/mailer.js";
 const SECRET = "sometext";
 
 const register = async (req, res) => {
@@ -15,6 +16,7 @@ const register = async (req, res) => {
       role,
     };
     const result = await userModel.create(user);
+    await sendWelcomeEmail(email,name);
     res.status(201).json(result);
   } catch (err) {
     console.log(err);

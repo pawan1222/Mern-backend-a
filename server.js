@@ -5,6 +5,7 @@ import userRouter from "./routes/userRoute.js";
 dotenv.config();
 
 const app = express();
+app.use(express.static("public"));
 const dbuser = encodeURIComponent(process.env.DBUSER);
 const dbpass = encodeURIComponent(process.env.DBPASS);
 
