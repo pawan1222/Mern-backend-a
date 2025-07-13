@@ -6,8 +6,10 @@ import cors from 'cors';
 dotenv.config();
 
 const app = express();
-app.use(express.static("public"));
+<<<<<<< HEAD
+=======
 app.use(cors());
+>>>>>>> bb3239c9c51dc675588653bcfe88eee10bfa8ad1
 app.use(express.static("public"));
 const dbuser = encodeURIComponent(process.env.DBUSER);
 const dbpass = encodeURIComponent(process.env.DBPASS);
