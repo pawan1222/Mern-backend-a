@@ -1,17 +1,13 @@
 // middleware/mailer.js
 import nodemailer from "nodemailer";
-import dotenv from "dotenv";
-dotenv.config();
-const email_user = encodeURIComponent(process.env.EMAIL_USER);
-const email_pass = encodeURIComponent(process.env.EMAIL_PASS);
 
 export const sendWelcomeEmail = async (toEmail, userName) => {
   try {
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
-        user: email_user,
-        pass: email_pass,
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
       },
     });
 
@@ -21,9 +17,9 @@ export const sendWelcomeEmail = async (toEmail, userName) => {
       subject: "🎉 Welcome to SkillBridge!",
       html: `
         <h2>Hi ${userName},</h2>
-        <p>Thank you for registering with platform!</p>
+        <p>Thank you for registering with ! We're excited to have you onboard.</p>
         <p>Start shopping amazing products now 🚀</p>
-        <p>Cheers,<br/>My Team</p>
+        <p>Cheers,<br/>SkillBridge Team</p>
       `,
     };
 

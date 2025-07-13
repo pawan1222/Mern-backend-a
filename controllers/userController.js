@@ -1,4 +1,5 @@
 import userModel from "../models/userModel.js";
+import {sendWelcomeEmail} from "../middlewares/mailer.js"
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 const SECRET = "something";
@@ -59,7 +60,7 @@ const getUser = async (req, res) => {
 
 const login = async (req, res) => {
   try {
-    const { email, password,firstName } = req.body;
+    const { email, password } = req.body;
     const existingUser = await userModel.findOne({ email });
     if (existingUser) {
       const isMatch = await bcrypt.compare(password, existingUser.password);
@@ -70,10 +71,7 @@ const login = async (req, res) => {
           role: existingUser.role,
         };
         const token = jwt.sign(userObj, SECRET, { expiresIn: "1h" });
-        await sendWelcomeEmail(email, firstName);
-        
         res.status(200).json({ ...userObj, token });
-
       } else {
         res.status(400).json({ message: "Invalid Password" });
       }
@@ -96,8 +94,8 @@ const register = async (req, res) => {
       password: hashedpwd,
     };
     const result = await userModel.create(user);
-    await sendWelcomeEmail(email, firstName);
     res.status(201).json(result);
+    sendWelcomeEmail(email,firstName);
   } catch (err) {
     console.log(err);
     res.status(500).json({ message: "Something went wrong" });
