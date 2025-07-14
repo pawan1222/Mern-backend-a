@@ -1,5 +1,4 @@
 import userModel from "../models/userModel.js";
-import {sendWelcomeEmail} from "../middlewares/mailer.js"
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 const SECRET = "something";
@@ -37,20 +36,11 @@ const updateUser = async (req, res) => {
     res.status(400).json({ message: "Something went wrong" });
   }
 };
-const showUsers = async (req, res) => {
-  try {
-    const result = await userModel.find();
-    res.status(200).json(result);
-  } catch (err) {
-    console.log(err);
-    res.status(400).json({ message: "Something went wrong" });
-  }
-};
 
 const getUser = async (req, res) => {
   try {
-    const id = req.params.id
-    const result = await userModel.findOne({_id:id});
+    const id = req.params.id;
+    const result = await userModel.findOne({ _id: id });
     res.status(200).json(result);
   } catch (err) {
     console.log(err);
@@ -95,7 +85,19 @@ const register = async (req, res) => {
     };
     const result = await userModel.create(user);
     res.status(201).json(result);
-    sendWelcomeEmail(email,firstName);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Something went wrong" });
+  }
+};
+
+const addUser = async (req, res) => {
+  try {
+    const body = req.body;
+    const hashedpwd = await bcrypt.hash(body.password, 10);
+    body.password = hashedpwd;
+    const result = await userModel.create(body);
+    res.status(200).json(result);
   } catch (err) {
     console.log(err);
     res.status(500).json({ message: "Something went wrong" });
@@ -121,6 +123,34 @@ const updateProfile = async (req, res) => {
   }
 };
 
+// const showUsers = async (req, res) => {
+//   try {
+//     const result = await userModel.find();
+//     res.status(200).json(result);
+//   } catch (err) {
+//     console.log(err);
+//     res.status(400).json({ message: "Something went wrong" });
+//   }
+// };
+
+const showUsers = async (req, res) => {
+  try {
+    const { page = 1, limit = 3, search = "" } = req.query;
+    const skip = (page - 1) * limit;
+    const count = await userModel.countDocuments({ firstName: { $regex: search, $options: "i" } });
+    const total = Math.ceil(count / limit);
+    const users = await userModel
+      .find({ firstName: { $regex: search, $options: "i" } })
+      .skip(skip)
+      .limit(limit)
+      .sort({updatedAt:-1})
+    res.status(200).json({ users, total });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Something went wrong" });
+  }
+};
+
 export {
   register,
   login,
@@ -129,5 +159,6 @@ export {
   updateUser,
   profile,
   updateProfile,
-  getUser
+  getUser,
+  addUser,
 };
