@@ -2,6 +2,7 @@ import userModel from "../models/userModel.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 const SECRET = "something";
+
 const profile = async (req, res) => {
   try {
     const id = req.params.id;
@@ -12,6 +13,7 @@ const profile = async (req, res) => {
     res.status(400).json({ message: "Something went wrong" });
   }
 };
+
 const deleteUser = async (req, res) => {
   try {
     const id = req.params.id;
@@ -22,6 +24,7 @@ const deleteUser = async (req, res) => {
     res.status(400).json({ message: "Something went wrong" });
   }
 };
+
 const updateUser = async (req, res) => {
   try {
     const id = req.params.id;
@@ -73,6 +76,7 @@ const login = async (req, res) => {
     res.status(500).json({ message: "Something went wrong" });
   }
 };
+
 const register = async (req, res) => {
   try {
     const { firstName, lastName, email, password } = req.body;
