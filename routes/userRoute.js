@@ -21,10 +21,9 @@ Router.patch("/:id/profile", updateProfile);
 
 //admin routes
 Router.get("/", showUsers);
-Router.post("/", addUser);
+Router.post("/", authenticate, authorize("admin"), addUser);
 Router.get("/:id", getUser);
 Router.patch("/:id", updateUser);
 Router.delete("/:id", deleteUser);
-
 
 export default Router;

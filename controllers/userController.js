@@ -59,6 +59,7 @@ const login = async (req, res) => {
       const isMatch = await bcrypt.compare(password, existingUser.password);
       if (isMatch) {
         const userObj = {
+          id:existingUser._id,
           firstName: existingUser.firstName,
           email: existingUser.email,
           role: existingUser.role,
