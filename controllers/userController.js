@@ -80,13 +80,14 @@ const login = async (req, res) => {
 
 const register = async (req, res) => {
   try {
-    const { firstName, lastName, email, password } = req.body;
+    const { firstName, lastName, email, password,role} = req.body;
     const hashedpwd = await bcrypt.hash(password, 10);
     const user = {
       firstName,
       lastName,
       email,
       password: hashedpwd,
+      role
     };
     const result = await userModel.create(user);
     res.status(201).json(result);

@@ -19,7 +19,7 @@ const dbpass = encodeURIComponent(process.env.DBPASS);
 // });
 
 mongoose
-  .connect(`mongodb+srv://${dbuser}:${dbpass}@cluster0.10aivni.mongodb.net/mern-db?retryWrites=true&w=majority&appName=Cluster0`)
+  .connect(`mongodb+srv://${dbuser}:${dbpass}@cluster0.10aivni.mongodb.net/shopping-app?retryWrites=true&w=majority&appName=Cluster0`)
   .then(() => {
     app.listen(8080, () => {
       console.log("Server started");
