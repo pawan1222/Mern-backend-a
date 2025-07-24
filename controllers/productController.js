@@ -2,14 +2,23 @@ import productModel from "../models/productModel.js";
 
 const addProduct = async (req, res) => {
   try {
-    const body = req.body;
-    const result = await productModel.create(body);
-    res.status(201).json(result);
+    const { productName, price, description } = req.body;
+    const newProduct = await productModel.create({
+      productName,
+      description,
+      price,
+      imgUrl: req.file.path,      
+      imgPublicId: req.file.filename
+    });
+    await newProduct.save();
+
+    res.status(201).json({ message: "Product created", product: newProduct });
   } catch (err) {
-    console.log(err);
-    res.status(500).json({ message: "Something went wrong" });
+    console.error("Error while adding product:", err);
+    res.status(500).json({ message: "Something went wrong" || "server error" });
   }
 };
+
 
 const deleteProduct = async (req, res) => {
   try {
@@ -71,13 +80,13 @@ const displayProducts = async (req, res) => {
     const { page = 1, limit = 100 } = req.query;
     const skip = (page - 1) * limit;
     const count = await productModel.countDocuments();
-    const total = Math.ceil(count/limit);
+    const total = Math.ceil(count / limit);
     const products = await productModel.find().skip(skip).limit(limit);
-    res.status(200).json({products, total});
+    res.status(200).json({ products, total });
   } catch (err) {
     console.log(err);
     res.status(500).json({ message: "Something went wrong" });
   }
 };
 
-export { addProduct, deleteProduct, updateProduct, getProduct, showProducts,displayProducts };
+export { addProduct, deleteProduct, updateProduct, getProduct, showProducts, displayProducts };
